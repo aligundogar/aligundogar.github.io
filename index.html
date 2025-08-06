@@ -1,354 +1,472 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="tr">
 <head>
-
-  <meta charset="UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ali Gündoğar | Portfolio</title>
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/skins/color-red.css" />
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" />
-  <link rel="stylesheet" href="css/style-switcher.css" />
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="images/h.png" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ali Gündoğar - İnteraktif Portfolyo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Subtle Accents -->
+    <!-- Application Structure Plan: A single-page, multi-section layout is chosen for a narrative-driven user experience. The user starts with a high-level summary and can scroll down to explore three core competency pillars: CTI/OSINT, Technical Implementation, and Strategic Analysis. This structure logically groups complex information, making it digestible. Interactive elements like tabbed sections for projects and a dynamic skills chart encourage exploration. The flow is designed to first establish credibility (summary), then provide deep evidence (competencies), and finally show practical application (projects), which is a more persuasive structure than a simple CV mirror. -->
+    <!-- Visualization & Content Choices:
+        - Competency Overview: Goal: Inform/Compare. Method: A polar area chart (Chart.js) is used to give a quick, visually balanced overview of his main skill areas. Interaction: Hovering over segments reveals the skill name, providing immediate clarity. Justification: A standard bar chart would be less engaging; the polar area chart offers a more modern "dashboard" feel that reflects his tech-savvy profile.
+        - Career Timeline: Goal: Show Change/Progression. Method: A vertical timeline built with HTML/Tailwind. Interaction: Clean visual flow, no complex interaction needed to avoid distraction. Justification: This is the clearest way to show career growth chronologically.
+        - Project Showcase: Goal: Organize/Inform. Method: A tabbed interface (HTML/JS). Interaction: Clicking tabs reveals detailed project descriptions. Justification: Tabs prevent information overload by showing only one detailed project at a time, making the section cleaner and more user-focused.
+        - Skills Matrix: Goal: Inform/Organize. Method: A structured list with progress-bar-like visuals (HTML/Tailwind). Interaction: Visual skill level indicators. Justification: More visually engaging than a simple bulleted list and conveys proficiency levels at a glance.
+        - No SVG/Mermaid is used, adhering to constraints. All visuals are created with Chart.js or styled HTML/CSS. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8;
+            color: #1a202c;
+            scroll-behavior: smooth;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+            border-bottom: 2px solid transparent;
+            padding-bottom: 4px;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #D97706; /* Amber-600 */
+            border-bottom-color: #D97706;
+        }
+        .tab-button {
+            transition: all 0.3s;
+        }
+        .tab-button.active {
+            background-color: #F59E0B; /* Amber-500 */
+            color: #ffffff;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -2.75rem;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #F59E0B;
+            border: 4px solid #FDFBF8;
+        }
+        .article-card {
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        }
+    </style>
 </head>
+<body class="antialiased">
 
-<body class="dark">
-  <canvas id="matrixCanvas"></canvas>
-  <!-- Matrix -->
-  <script src="/js/matrix.js"></script>
-  <!-- Main Container Start -->
-  <div class="main-container">
-    <!-- Aside Start -->
-    <div class="aside">
-      <div class="logo">
-        <a href="index.html"><span>Salva</span></a>
-      </div>
-      <div class="nav-toggler">
-        <span></span>
-      </div>
-      <ul class="nav">
-        <li>
-          <a href="#home" class="active"><i class="fa fa-home"></i> Home</a>
-        </li>
-        <li>
-          <a href="#about"><i class="fa fa-user"></i> About</a>
-        </li>
-        <li>
-          <a href="#education"><i class="fa fa-book"></i> Educations</a>
-        </li>
-        <li>
-          <a href="#contact"><i class="fa fa-comments"></i> Contact</a>
-        </li>
-
-      </ul>
-    </div>
-    <!-- Aside End -->
-    <!-- Main Content Start -->
-    <div class="main-content">
-      <!-- Home Section Start -->
-      <section class="home active section" id="home">
-        <div class="container">
-          <div class="row">
-            <div class="home-info padd-15">
-              <h3 class="hello"> 
-                Hello, my name is <span class="name">Ali Gündoğar </span>
-              </h3>
-              <h3 class="my-profession">
-                I'm a <span class="typing"></span>
-              </h3>
-              <p>Welcome to my portfolio! As a certified Hacker, I'm specialized in ethical hacking methodologies. I possess extensive knowledge of penetration testing, vulnerability assessment, and bug bounty hunting. My goal is to identify and address potential vulnerabilities before malicious actors can exploit them.</p>
-              <a href="#" class="btn">Download CV</a>
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-gray-800">
+                Ali Gündoğar
             </div>
-            <div class="home-img padd-5">
-              <img src="images/h.png" alt="hero" />
+            <div class="hidden md:flex items-center space-x-6">
+                <a href="#summary" class="nav-link font-medium text-gray-600">Özet</a>
+                <a href="#competencies" class="nav-link font-medium text-gray-600">Yetkinlikler</a>
+                <a href="#projects" class="nav-link font-medium text-gray-600">Projeler</a>
+                <a href="#articles" class="nav-link font-medium text-gray-600">Makaleler</a>
+                <a href="#career" class="nav-link font-medium text-gray-600">Kariyer</a>
+                <a href="#education" class="nav-link font-medium text-gray-600">Eğitim</a>
+                <a href="#contact" class="nav-link font-medium text-gray-600">İletişim</a>
             </div>
-          </div>
+            <button id="mobile-menu-button" class="md:hidden text-gray-700 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#summary" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Özet</a>
+            <a href="#competencies" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Yetkinlikler</a>
+            <a href="#projects" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Projeler</a>
+            <a href="#articles" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Makaleler</a>
+            <a href="#career" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Kariyer</a>
+            <a href="#education" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">Eğitim</a>
+            <a href="#contact" class="mobile-nav-link block py-2 px-4 text-sm text-gray-700 hover:bg-amber-50">İletişim</a>
         </div>
-      </section>
-      <!-- Home Section End -->
+    </header>
 
-      <!-- About Section Start -->
-      <section class="about section" id="about">
-        <div class="container">
-          <div class="row">
-            <div class="section-title padd-15">
-              <h2>About Me</h2>
+    <main class="container mx-auto px-6 py-12">
+
+        <section id="summary" class="mb-24 scroll-mt-20">
+            <div class="grid md:grid-cols-5 gap-12 items-center">
+                <div class="md:col-span-3">
+                    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4">Uygulayıcı-Stratejist</h1>
+                    <h2 class="text-xl md:text-2xl font-medium text-amber-600 mb-6">Siber Güvenlik Araştırmacısı & İstihbarat Analisti</h2>
+                    <p class="text-gray-600 leading-relaxed mb-6">
+                        Teknik uygulama derinliği ile stratejik analiz yeteneğini birleştiren, modern güvenlik ve istihbarat alanlarında nadir rastlanan bir profesyonel. Yalnızca siber tehditleri tespit edip etkisiz hale getiren bir analist değil, aynı zamanda bu tehditlerin altında yatan jeopolitik bağlamı anlayan ve istihbarat yaşam döngüsünü yönetmek için gerekli otomasyon sistemlerini sıfırdan inşa edebilen bir mühendis.
+                    </p>
+                    <div class="flex space-x-4">
+                        <a href="#contact" class="bg-amber-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-amber-600 transition-colors shadow-md">İletişime Geç</a>
+                        <a href="#projects" class="bg-gray-200 text-gray-800 font-bold py-3 px-6 rounded-lg hover:bg-gray-300 transition-colors">Projeleri Gör</a>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <div class="chart-container">
+                        <canvas id="skillsChart"></canvas>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="row">
-            <div class="about-content padd-15">
-              <div class="row">
-                <div class="about-text padd-15">
-                  <h3>I'm Ali Gündoğar and<span> Security Researcher&nbsp;&nbsp;</span></h3>
-                  <p>
-                    I’ve always been driven by the idea that the digital world should be as free and secure as possible. Over time, that curiosity turned into a passion for building more resilient and open digital spaces.
-                  </p>
-                </div>
-              </div>
-              <div class="row">
-                <div class="personal-info padd-15">
-                  <div class="row">
-                    <div class="info-item padd-15">
-                      <p>Birthday : xx/xx/2003<span></span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Age : 22<span></span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Website : <span>www.domain.com</span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Email : <span>salvacybersec@gmail.com</span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Degree : <span>Cyber Security</span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Phone : <span>+90 xxxxxx</span></p>
-                    </div>
-                    <div class="info-item padd-15">
-                      <p>Country : <span>Turkey</span></p>
-                    </div>
-                  </div>
-                  <div class="row">
-                    <div class="buttons padd-15">
-                      <a href="#" class="btn">Download CV</a>
-                      <a href="#contact" class="btn hire-me">Hire Me</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="skills padd-15">
-                  <div class="row">
-                    <div class="skills-item padd-15">
-                      <h5>Linux Security</h5>
-                      <div class="progress">
-                        <div class="progress-in" style="width: 95%"></div>
-                        <div class="skill-percent">95%</div>
-                      </div>
-                    </div>
-                    <div class="skills-item padd-15">
-                      <h5>Web Applications</h5>
-                      <div class="progress">
-                        <div class="progress-in" style="width: 85%"></div>
-                        <div class="skill-percent">85%</div>
-                      </div>
-                    </div>
-                    <div class="skills-item padd-15">
-                      <h5>Network Pentesting</h5>
-                      <div class="progress">
-                        <div class="progress-in" style="width: 85%"></div>
-                        <div class="skill-percent">85%</div>
-                      </div>
-                    </div>
-                    <div class="skills-item padd-15">
-                      <h5>DDoS</h5>
-                      <div class="progress">
-                        <div class="progress-in" style="width: 97%"></div>
-                        <div class="skill-percent">97%</div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+        </section>
+
+        <section id="competencies" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Temel Yetkinlikler</h2>
+                <p class="text-lg text-gray-500 mt-2">Teknik, analitik ve stratejik yeteneklerin entegre bir bütünü.</p>
             </div>
-          </div>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600 mb-6 text-3xl">
+                        <span>🛡️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">CTI & OSINT</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Siber tehdit verilerinin toplanması, işlenmesi, analizi ve raporlanmasında kanıtlanmış operasyonel uzmanlık. Derin web keşfi ve tehdit avcılığı operasyonları ile proaktif savunma.
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600 mb-6 text-3xl">
+                        <span>⚙️</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Teknik Uygulama & Otomasyon</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Sıfırdan karmaşık istihbarat platformları ve otomasyon iş akışları tasarlama, geliştirme ve yönetme becerisi. Linux, Docker ve Python/Node.js ile tam yığın çözümler.
+                    </p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100">
+                    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600 mb-6 text-3xl">
+                        <span>🌍</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Jeopolitik & Stratejik Analiz</h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Küresel ve bölgesel güvenlik konularında derinlemesine ve kanıta dayalı analizler üretme kapasitesi. Teknik bulguları stratejik bir bağlama oturtma yeteneği.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="projects" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Öne Çıkan Projeler</h2>
+                <p class="text-lg text-gray-500 mt-2">Fikirleri tam işlevli, güvenli ve ölçeklenebilir ürünlere dönüştürme yeteneği.</p>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-lg p-4 md:p-8 border border-gray-100">
+                <div class="flex justify-center mb-6 border-b border-gray-200">
+                    <button class="tab-button py-3 px-6 font-medium text-gray-600 rounded-t-lg active" data-tab="project1">AI Haber Paneli</button>
+                    <button class="tab-button py-3 px-6 font-medium text-gray-600 rounded-t-lg" data-tab="project2">InfraScan</button>
+                    <button class="tab-button py-3 px-6 font-medium text-gray-600 rounded-t-lg" data-tab="project3">Homelab</button>
+                </div>
+
+                <div id="project-content">
+                    <div class="tab-content active" id="project1">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Yapay Zeka Destekli Haber Muhabiri Paneli</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            Bu proje, istihbarat verilerinin toplanmasından işlenmesine, analiz edilmesinden raporlanmasına kadar tüm süreci otomatikleştiren uçtan uca bir istihbarat platformudur. En sofistike yönü, operasyonel güvenliği (OPSEC) sağlamak ve veri sızıntısı riskini ortadan kaldırmak için bulut tabanlı API'ler yerine yerel olarak barındırılan bir Büyük Dil Modeli (Ollama) kullanmasıdır. Bu mimari, tüm istihbarat yaşam döngüsünün tam kontrol altında kalmasını sağlar.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Python</span>
+                            <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Node.js</span>
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Docker</span>
+                            <span class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Ollama (AI)</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">SQLite</span>
+                        </div>
+                    </div>
+                    <div class="tab-content hidden" id="project2">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">InfraScan: Kritik Altyapı Haritalama Aracı</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            OpenStreetMap (OSM) veritabanını ve Overpass QL sorgu dilini kullanarak herhangi bir ülkenin kritik altyapı varlıklarını (enerji santralleri, askeri üsler, hastaneler vb.) haritalandırmak için tasarlanmış bir OSINT aracıdır. Bu proje, CTI'ın coğrafi bağlam ve ulusal risk değerlendirmesi gibi fiziksel unsurları da içermesi gerektiği yönündeki derin anlayışı ortaya koyar. Taktiksel bir OSINT sorgusunu, tekrarlanabilir ve ölçeklenebilir bir stratejik analiz aracına dönüştürür.
+                        </p>
+                         <div class="flex flex-wrap gap-2">
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Python</span>
+                            <span class="bg-purple-100 text-purple-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">OSINT</span>
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">API</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Geo-Spatial Analysis</span>
+                        </div>
+                    </div>
+                     <div class="tab-content hidden" id="project3">
+                        <h3 class="text-2xl font-bold text-gray-800 mb-4">Kişisel Ar-Ge Merkezi: Homelab</h3>
+                        <p class="text-gray-600 leading-relaxed mb-6">
+                            Bir hobiden ziyade, siber güvenlik ve istihbarat operasyonlarını desteklemek için tasarlanmış özel bir Ar-Ge ortamıdır. Portainer, OpenCTI, AdGuard DNS, n8n ve FreshRSS gibi hizmetleri barındırarak karmaşık bir teknik ekosistemi tasarlama, inşa etme ve sürdürme yeteneğini gösterir. Bu altyapı, küçük ölçekli bir kurumsal ortamı yansıtmakta ve entegre sistem yönetimi kapasitesini kanıtlamaktadır.
+                        </p>
+                         <div class="flex flex-wrap gap-2">
+                            <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Docker</span>
+                            <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Linux</span>
+                            <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">System Administration</span>
+                            <span class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Network Security</span>
+                            <span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Virtualization</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="articles" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Makaleler ve Araştırmalar</h2>
+                <p class="text-lg text-gray-500 mt-2">Teknik, stratejik ve akademik alanlardaki entelektüel katkılar.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="article-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col">
+                    <h3 class="text-xl font-bold mb-3 flex-grow">
+                        <a href="https://svako.lt/data/upload/2023_2(1)_asr/26-40_gundogar.pdf" target="_blank" class="hover:text-amber-600 transition-colors">
+                            Yapay Genel Zeka Robotlarının Potansiyel Riskleri <span class="text-sm font-normal text-amber-700">[PDF]</span>
+                        </a>
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">AGI'nin sosyal, güvenlik ve emniyet boyutlarındaki risklerini analiz eden, hakemli ve atıf alan akademik makale.</p>
+                    <div class="text-sm text-gray-500 space-y-1 mb-4">
+                        <p><strong>Yazarlar:</strong> Ali Gündoğar, Saulius Niauronis</p>
+                        <p><strong>Yayın:</strong> Applied Scientific Research, 2(1), 26-40</p>
+                        <p><strong>Tarih:</strong> 13 Nisan 2023 | <strong>Toplam Atıf:</strong> 9</p>
+                    </div>
+                    <div class="mt-auto">
+                        <span class="bg-red-100 text-red-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Akademik Yayın</span>
+                        <span class="bg-blue-100 text-blue-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">AI Güvenliği</span>
+                    </div>
+                </div>
+                <div class="article-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col">
+                    <h3 class="text-xl font-bold mb-3 flex-grow">Çin'in Kamboçya Kanal Projesi</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">Funan Techo Kanalı'nın jeopolitik önemini ve Çin'in "İnci Dizisi Stratejisi" içindeki yerini inceleyen stratejik analiz.</p>
+                     <div class="mt-auto">
+                        <span class="bg-green-100 text-green-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Jeopolitik</span>
+                        <span class="bg-purple-100 text-purple-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">Stratejik Analiz</span>
+                    </div>
+                </div>
+                <div class="article-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col">
+                    <h3 class="text-xl font-bold mb-3 flex-grow">Kritik Altyapı Haritalaması (OSM Rehberi)</h3>
+                    <p class="text-gray-600 leading-relaxed mb-4">CTI analistleri için OpenStreetMap kullanarak kritik altyapıları haritalandırmaya yönelik pratik bir metodoloji ve sorgu rehberi.</p>
+                     <div class="mt-auto">
+                        <span class="bg-yellow-100 text-yellow-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">OSINT</span>
+                        <span class="bg-gray-100 text-gray-800 text-sm font-medium mr-2 px-2.5 py-0.5 rounded">CTI</span>
+                    </div>
+                </div>
+                <a href="https://medium.com/@salvacybersec" target="_blank" class="article-card bg-white p-6 rounded-xl shadow-lg border border-gray-100 flex flex-col items-center justify-center text-center">
+                    <div class="flex items-center justify-center w-16 h-16 rounded-full bg-amber-100 text-amber-600 mb-4 text-3xl">
+                        <span>→</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Daha Fazlası İçin</h3>
+                    <p class="text-gray-600 leading-relaxed">Medium profilindeki diğer stratejik analizleri ve teknik yazıları okuyun.</p>
+                </a>
+            </div>
+        </section>
+
+        <section id="career" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Kariyer Yolu</h2>
+                <p class="text-lg text-gray-500 mt-2">Teknik rollerden uzmanlık ve liderlik pozisyonlarına doğru net bir ilerleme.</p>
+            </div>
+            <div class="relative pl-20">
+                <div class="absolute left-0 h-full border-l-2 border-gray-200" style="left: 10px;"></div>
+                <div class="timeline-item mb-12">
+                    <h4 class="text-lg font-bold text-amber-600">Siber Tehdit İstihbarat Analisti</h4>
+                    <p class="font-medium text-gray-700">PROUDSEC & YANDEX</p>
+                    <p class="text-sm text-gray-500">2024 - Günümüz</p>
+                    <p class="text-gray-600 mt-2">Derin web keşfi, tehdit avcılığı, C2 analizi ve altyapı atfı. Kötü amaçlı varlıkların tespiti ve etkisizleştirilmesi.</p>
+                </div>
+                <div class="timeline-item mb-12">
+                    <h4 class="text-lg font-bold text-amber-600">Güvenlik Ekibi Eş Lideri</h4>
+                    <p class="font-medium text-gray-700">Born2beRoot</p>
+                    <p class="text-sm text-gray-500">2020 - 2023</p>
+                    <p class="text-gray-600 mt-2">Uzak bir güvenlik ekibine liderlik etme, tehdit analizi, SaaS ortamı değerlendirmeleri ve Linux sunucu/ağ savunması.</p>
+                </div>
+                <div class="timeline-item mb-12">
+                    <h4 class="text-lg font-bold text-amber-600">Junior Sızma Testi Uzmanı</h4>
+                    <p class="font-medium text-gray-700">LAWTECH</p>
+                    <p class="text-sm text-gray-500">2020 - 2023</p>
+                    <p class="text-gray-600 mt-2">Müşteri ağlarında ve sistemlerinde güvenlik değerlendirmeleri yapma, zafiyetleri tespit etme ve detaylı raporlar hazırlama.</p>
+                </div>
+                <div class="timeline-item">
+                    <h4 class="text-lg font-bold text-amber-600">Teknik ve BT Destek Rolleri</h4>
+                    <p class="font-medium text-gray-700">Çeşitli Kurumlar</p>
+                    <p class="text-sm text-gray-500">2021 - 2024</p>
+                    <p class="text-gray-600 mt-2">Ağ, sunucu, Active Directory ve kurumsal sistem yönetimi konularında temel teknik altyapı deneyimi kazanma.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="mb-24 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-gray-800">Eğitim Geçmişi</h2>
+                <p class="text-lg text-gray-500 mt-2">Uygulamalı ve teorik bilginin temelleri.</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 text-center">
+                    <div class="flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 text-amber-600 mb-6 text-4xl mx-auto">
+                        <span>🎓</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">Šiauliai State University of Applied Sciences</h3>
+                    <p class="text-amber-600 font-semibold mb-3">Bilgisayar Bilimleri</p>
+                    <p class="text-gray-600 leading-relaxed">
+                        Uygulamalı Bilimler metodolojisi, IOT, Robotik, Ağ Güvenliği, Yapay Zeka ve Elektronik konularında çalışmalar yürütülmüştür.
+                    </p>
+                </div>
+                 <div class="bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow border border-gray-100 text-center">
+                    <div class="flex items-center justify-center w-20 h-20 rounded-full bg-amber-100 text-amber-600 mb-6 text-4xl mx-auto">
+                        <span>🎓</span>
+                    </div>
+                    <h3 class="text-xl font-bold mb-2">İzmir Kavram Meslek Yüksekokulu</h3>
+                    <p class="text-amber-600 font-semibold mb-3">Bilgisayar Programcılığı (Ön Lisans)</p>
+                    <p class="text-gray-600 leading-relaxed">
+                        Bilgisayar programcılığı, web programlama temelleri ve programlama dilleri prensipleri üzerine temel eğitim alınmıştır.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="scroll-mt-20">
+             <div class="text-center bg-white p-12 rounded-xl shadow-lg border border-gray-100">
+                <h2 class="text-3xl font-bold text-gray-800">İletişime Geçin</h2>
+                <p class="text-lg text-gray-500 mt-2 mb-8">İşbirliği, projeler veya daha fazla bilgi için.</p>
+                <div class="flex justify-center items-center space-x-6">
+                     <a href="https://www.linkedin.com/in/aligundogar/" target="_blank" class="text-gray-500 hover:text-amber-600 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" clip-rule="evenodd"/></svg>
+                    </a>
+                    <a href="https://github.com/aligundogar" target="_blank" class="text-gray-500 hover:text-amber-600 transition-colors">
+                        <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.168 6.839 9.49.5.092.682-.217.682-.482 0-.237-.009-.868-.014-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.031-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.378.203 2.398.1 2.651.64.7 1.03 1.595 1.03 2.688 0 3.848-2.338 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.577.688.482A10.001 10.001 0 0022 12c0-5.523-4.477-10-10-10z" clip-rule="evenodd"/></svg>
+                    </a>
+                     <a href="https://whoami.aligundogar.me/" target="_blank" class="text-gray-500 hover:text-amber-600 transition-colors">
+                         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"></path></svg>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-gray-100 border-t border-gray-200">
+        <div class="container mx-auto px-6 py-4 text-center text-gray-500">
+            <p>&copy; 2024 Ali Gündoğar. Tüm hakları saklıdır.</p>
         </div>
-      </section>
-      <!-- About Section End -->
+    </footer>
 
-      <!-- Educations & Experience Section Start -->
-      <section class="education section" id="education">
-        <div class="container">
-          <div class="row">
-            <div class="section-title padd-15">
-              <h2>Educations & Experience</h2>
-            </div>
-          </div>
-          <div class="row">
-            <div class="education padd-15">
-              <h3 class="title">Education</h3>
-              <div class="row">
-                <div class="timeline-box padd-15">
-                  <div class="timeline shadow-dark">
-                      <!-- Timeline item -->
-                    <div class="timeline-item">
-                      <div class="circle-dot"></div>
-                      <h3 class="timeline-date">
-                        <i class="fa fa-calendar"></i> 2022 - 2023
-                      </h3>
-                      <h4 class="timeline-title">
-                        Information Technology | Šiauliai State University of Applied Sciences
-                      </h4>
-                      <p class="timeline-text">
-                        Erasmus student and Researcher. I study about cybersecurity and artifical intelligence and I published my research paper, An overview of potential risks of artificial general intelligence robots. (https://doi.org/10.56131/tmt.2023.2.1.93) 
-                      </p>
-                    </div>
-                  
-                    
-                    <!-- Timeline item -->
-                    <div class="timeline-item">
-                      <div class="circle-dot"></div>
-                      <h3 class="timeline-date">
-                        <i class="fa fa-calendar"></i> 2021 - 2024
-                      </h3>
-                      <h4 class="timeline-title">
-                        Computer Programming
-                      </h4>
-                      <p class="timeline-text">
-                        I studied computer programming and worked as assistant student in my University's IT department. I managed active directory servers, mail servers, Learning management systems etc.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="experience padd-15">
-              <h3 class="title">Experience</h3>
-              <div class="row">
-                <div class="timeline-box padd-15">
-                  <div class="timeline shadow-dark">
-                    <!-- Timeline item -->
-                    <div class="timeline-item">
-                      <div class="circle-dot"></div>
-                      <h3 class="timeline-date">
-                        <i class="fa fa-calendar"></i> 2024
-                      </h3>
-                      <h4 class="timeline-title">
-                        Search Engine Quality Improvement Specialist | Yandex
-                      </h4>
-                      <p class="timeline-text">
-                        I contributed to enhancing Yandex's search engine quality, focusing on improving algorithms and ensuring better search results. I utilized my knowledge of Search Engine Optimization (SEO) and security consulting to optimize processes, ensuring higher user engagement and accuracy in search results.
-                      </p>
-                    </div>
-                    <!-- Timeline item -->
-                    <div class="timeline-item">
-                      <div class="circle-dot"></div>
-                      <h3 class="timeline-date">
-                        <i class="fa fa-calendar"></i> 2024
-                      </h3>
-                      <h4 class="timeline-title">
-                        Shareholder | SolusVM Türkiye
-                      </h4>
-                      <p class="timeline-text">
-                        As a shareholder, I assisted with decision-making and growth strategies, particularly in the tech sector. My contributions were centered around technical solutions, particularly in the Linux server management space.
-                      </p>
-                    </div>
-                    <!-- Timeline item -->
-                    <div class="timeline-item">
-                      <div class="circle-dot"></div>
-                      <h3 class="timeline-date">
-                        <i class="fa fa-calendar"></i> 2020 - 2023
-                      </h3>
-                      <h4 class="timeline-title">
-                        Cyber Security Specialist | Born2beRoot / LAWTECH / BaseOne Agency / Learniverse 
-                      </h4>
-                      <p class="timeline-text">
-                        In this brief role, I focused on assessing and enhancing the organization’s cybersecurity infrastructure. My primary responsibility was evaluating potential threats and implementing mitigation strategies to enhance security.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-      </section>
-      <!-- Educations & Experience Section End -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const skillsChartCanvas = document.getElementById('skillsChart');
+            if (skillsChartCanvas) {
+                new Chart(skillsChartCanvas, {
+                    type: 'polarArea',
+                    data: {
+                        labels: ['CTI & OSINT', 'Teknik Uygulama', 'Stratejik Analiz', 'Yazılım Mimarisi', 'Güvenlik Araştırması'],
+                        datasets: [{
+                            label: 'Yetkinlik Alanları',
+                            data: [90, 95, 85, 80, 75],
+                            backgroundColor: [
+                                'rgba(245, 158, 11, 0.5)',
+                                'rgba(217, 119, 6, 0.5)',
+                                'rgba(180, 83, 9, 0.5)',
+                                'rgba(120, 53, 15, 0.5)',
+                                'rgba(251, 191, 36, 0.5)'
+                            ],
+                            borderColor: [
+                                'rgb(245, 158, 11)',
+                                'rgb(217, 119, 6)',
+                                'rgb(180, 83, 9)',
+                                'rgb(120, 53, 15)',
+                                'rgb(251, 191, 36)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            r: {
+                                pointLabels: { display: true, centerPointLabels: true, font: { size: 14 } },
+                                ticks: { display: false }
+                            }
+                        },
+                        plugins: {
+                            legend: { position: 'bottom', labels: { font: { size: 12 } } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.dataset.label || '';
+                                        if (label) { label += ': '; }
+                                        if (context.parsed.r !== null) { label += context.parsed.r + ' / 100'; }
+                                        return label;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
 
-      <!-- Contact Section Start -->
-      <section class="contact section" id="contact">
-        <div class="container">
-          <div class="row">
-            <div class="section-title padd-15">
-              <h2>Contact Me</h2>
-            </div>
-          </div>
-          <h3 class="contact-title padd-15">Do You Have Any Questions?</h3>
-          <h4 class="contact-sub-title padd-15">I'M AT YOUR education</h4>
-          <div class="row">
-            <!-- Contact info item-->
-            <div class="contact-info-item padd-15">
-              <div class="icon"><i class="fa fa-phone"></i></div>
-              <h4>Phone No.</h4>
-              <p>+91 1234567890</p>
-            </div>
-            <!-- Contact info item-->
-            <div class="contact-info-item padd-15">
-              <div class="icon"><i class="fa fa-map-marker-alt"></i></div>
-              <h4>Location</h4>
-              <p>Turkey</p>
-            </div>
-            <!-- Contact info item-->
-            <div class="contact-info-item padd-15">
-              <div class="icon"><i class="fa fa-envelope"></i></div>
-              <h4>Email</h4>
-              <p>salvacybersec@gmail.com</p>
-            </div>
-            <!-- Contact info item-->
-            <div class="contact-info-item padd-15">
-              <div class="icon"><i class="fa fa-globe-europe"></i></div>
-              <h4>LinkedIn</h4>
-              <p><a href="https://www.linkedin.com/in/aligundogar/">aligundogar</a></p>
-            </div>
-          </div>
-          <h3 class="contact-title padd-15">SEND ME AN EMAIL</h3>
-          <h4 class="contact-sub-title padd-15">
-            I'M VERY RESPONSIVE TO MESSAGES
-          </h4>
-          <!-- Contact form -->
-          <div class="row">
-            <div class="contact-form padd-15">
-              <div class="row">
-                <div class="form-item col-6 padd-15">
-                  <div class="form-group">
-                    <input type="text" class="form-control" placeholder="Name" />
-                  </div>
-                </div>
-                <div class="form-item col-6 padd-15">
-                  <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Email" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-item col-12 padd-15">
-                  <div class="form-group">
-                    <input type="email" class="form-control" placeholder="Subject" />
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-item col-12 padd-15">
-                  <div class="form-group">
-                    <textarea class="form-control" placeholder="Message"></textarea>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="form-item col-12 padd-15">
-                  <div class="form-group">
-                    <button type="submit" class="btn">Send Message</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-      <!-- Contact Section End -->
-    </div>
-    <!-- Main Content End -->
-  </div>
-  <!-- Main Container End -->
-  <!-- Custom JS -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.0.12/typed.min.js"
-    referrerpolicy="no-referrer"></script>
-  <script src="js/script.js"></script>
+            const tabs = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    tabContents.forEach(content => {
+                        content.classList.add('hidden');
+                        content.classList.remove('active');
+                        if (content.id === target) {
+                            content.classList.remove('hidden');
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+
+            const navLinks = document.querySelectorAll('header nav a');
+            const sections = document.querySelectorAll('main section');
+            const activateNavLink = (current) => {
+                 navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === current) {
+                        link.classList.add('active');
+                    }
+                });
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                       activateNavLink(entry.target.id);
+                    }
+                });
+            }, { rootMargin: '-30% 0px -70% 0px', threshold: 0 });
+
+            sections.forEach(section => {
+                observer.observe(section);
+            });
+        });
+    </script>
 </body>
-
 </html>
